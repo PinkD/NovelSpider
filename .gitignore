@@ -1,0 +1,7 @@
+test*
+*.db
+*.db-journal
+novels
+config.py
+.idea/
+__pycache__/
