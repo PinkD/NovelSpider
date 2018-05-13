@@ -1,4 +1,5 @@
 test*
+*.log
 *.db
 *.db-journal
 novels
