@@ -47,24 +47,26 @@ class NovelSpider:
             result = self._opener.open(page).read().decode()
             with open('novels/%d_%s.txt' % (novel.id, novel.title), 'w') as f:
                 try:
-                    for i in range(1, max_page - 1):
+                    for i in range(1, max_page + 1):
                         content = re.findall('<div id="nr1" style="font-size:18px;">([\s\S]*?)</div>', result).pop().replace('</p>\r\n<p></p>', '').replace('<p>', '').replace('</p>', '').replace('&nbsp;', ' ')
                         # print(content)
                         print('%s->%d/%d' % (novel.title, i, max_page))
                         f.write(content)
+                        if i == max_page:
+                            break
                         page = re.findall('<td class="next"><a id="pt_next" href="(' + BASE_URL + '/novel/[0-9]*?/[0-9]*?\.html)">下一章</a></td>', result).pop()
                         # print(page)
                         result = self._opener.open(page).read().decode()
                         time.sleep(1)
                     self._db.insert_novel(novel)
                     print(novel.title + ' Done')
-                    self.log_file.write(novel.title + ' Done')
+                    self.log_file.write(novel.title + " Done\n")
                     return
                 except Exception as e:
                     print(e)
             retry_time += 1
         print("!!!Fail to save %s" % novel.title)
-        self.log_file.write("!!!Fail to save %s" % novel.title)
+        self.log_file.write("!!!Fail to save %s\n" % novel.title)
 
     def start(self):
         result = self._opener.open(BASE_URL + '/wapsort/11_1.html').read().decode()
